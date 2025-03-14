@@ -1,0 +1,66 @@
+\section{绪论}
+\subsection{引言}
+略
+\subsection{基本术语}
+\subsubsection{数据集-data set}
+训练集-training data
+\begin{center}
+    \begin{tikzpicture}[
+        mindmap,
+        concept color=orange!30,  % 中心节点颜色
+        every node/.style=concept,
+        level 1/.append style={
+            sibling angle=120,
+            level distance=5cm,
+            concept color=blue!20
+        },
+        level 2/.append style={
+            sibling angle=60,
+            level distance=3.5cm,
+            concept color=green!20
+        },
+        level 3/.append style={
+            sibling angle=45,
+            level distance=2.5cm,
+            concept color=red!20
+        }
+    ]
+    
+    % 中心节点
+    \node {机器学习类型} 
+        % 第一层级分支
+        child [grow=30] { node {监督学习}
+            child { node {分类}
+                child { node {二分类}
+                    child { node {逻辑回归} }
+                    child { node {SVM} }
+                }
+                child { node {多分类}
+                    child { node {Softmax回归} }
+                    child { node {决策树} }
+                }
+            }
+            child { node {回归}
+                child { node {线性回归} }
+                child { node {多项式回归} }
+                child { node {Lasso回归} }
+            }
+        }
+        child [grow=150] { node {无监督学习}
+            child { node {聚类}
+                child { node {K-Means} }
+                child { node {层次聚类} }
+                child { node {DBSCAN} }
+            }
+            child { node {降维}
+                child { node {PCA} }
+                child { node {t-SNE} }
+            }
+        }
+        child [grow=270] { node {半监督学习}
+            child { node {标签传播} }
+            child { node {自训练} }
+        };
+    
+    \end{tikzpicture}
+    \end{center}
