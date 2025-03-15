@@ -13,8 +13,10 @@
 \usepackage{fontspec}
 \usepackage{titlesec}
 \usepackage{cleveref}
-\usepackage{tikz}
-\usetikzlibrary{mindmap,trees}
+\usepackage{forest}
+\definecolor{myblue}{RGB}{173,216,230}
+\definecolor{mygreen}{RGB}{144,238,144}
+\definecolor{myred}{RGB}{255,182,193}
 % 设置英文主字体为 Times New Roman
 \setmainfont{Times New Roman}[Path=D:/Program Files/MiKTeX/fonts/custom/, Extension=.otf]
 
@@ -58,10 +60,6 @@
 }
 \geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm} % 页边距
 
-% 封面设置
-\title{SQL数据库系统课后练习}
-\author{lanshi}
-\date{\today}
 
 \begin{document}
 
@@ -69,15 +67,15 @@
 \begin{titlepage}
     \centering
     \vspace*{\fill}
-    {\LARGE\bfseries 数据库系统原理课程\par}
+    {\LARGE\bfseries 人工智能学习笔记\par}
     \vspace{2cm}
-    {\Huge\bfseries SQL课后练习题集\par}
+    {\Huge\bfseries 西瓜书学习笔记\par}
     \vspace{2cm}
     {\Large 烂石\par}
     \vspace{1cm}
     {\large \today \par}
     \vspace{4cm}
-    \includegraphics[width=0.5\textwidth]{images/logo.jpg}
+    \includegraphics[width=0.5\textwidth]{images/logo.png}
     \vspace*{\fill}
     \thispagestyle{empty} % 封面不显示页码
     \newpage
