@@ -1,23 +1,38 @@
 \documentclass[a4paper,12pt,UTF8,fontset=none]{ctexart}
 \usepackage{geometry} % 页面设置
 \usepackage{xeCJK}
+\usepackage{enumitem}
 \usepackage{xcolor} % Color support for listings
 \usepackage{graphicx}
-\usepackage{amssymb} % For join symbol
-\usepackage{amsmath}
+\usepackage{float}
+\usepackage{pdfpages}
+\usepackage{amsmath, amsthm, amssymb}
 \usepackage{listings}
-\usepackage{enumitem} 
 \usepackage{longtable}
 \usepackage{booktabs} % 添加booktabs宏包以支持三线表
+\usepackage{tabularx} % 新增tabularx宏包用于自动调整列宽
+\usepackage{array}      % 列格式控制
+\usepackage{caption}    % 表格标题格式
 \usepackage{placeins} 
 \usepackage{newtxtext,newtxmath}
 \usepackage{fontspec}
 \usepackage{titlesec}
+\usepackage{bm} % 加粗符号
+\usepackage{background} % 添加水印宏包
+\usepackage{hyperref} % 超链接引用
 \usepackage{cleveref}
-\usepackage{forest}
-\definecolor{myblue}{RGB}{173,216,230}
-\definecolor{mygreen}{RGB}{144,238,144}
-\definecolor{myred}{RGB}{255,182,193}
+\newtheorem{theorem}{定理}[section] % 定理编号按章节
+\newtheorem{proofstep}{步骤}[theorem] % 证明步骤编号依附定理
+
+% 自定义关键项高亮命令
+\newcommand{\highlight}[1]{\textcolor{red}{\boxed{#1}}}
+\backgroundsetup{ % 水印参数设置
+    scale=3,          % 水印文字大小（可调）
+    angle=0,         % 水印旋转角度
+    opacity=0.25,     % 透明度（0-1）
+    contents={\includegraphics[width=0.5\textwidth]{static/pdfs/水印.pdf}} % 改为正确的水印文件
+    % contents={lanshi}
+}
 % 设置英文主字体为 Times New Roman
 \setmainfont{Times New Roman}[Path=D:/Program Files/MiKTeX/fonts/custom/, Extension=.otf]
 
@@ -31,18 +46,33 @@
 \setCJKfamilyfont{zhhei}{SimHei}[Path=D:/Program Files/MiKTeX/fonts/custom/, Extension=.ttf]
 \newcommand{\heiti}{\CJKfamily{zhhei}}
 
-
-
+% 自定义编号格式
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
+\renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
 % 设置标题格式
 \titleformat{\section}
-  {\heiti\zihao{-3}\enboldfont}{\thesection}{1em}{}
+  {\centering\heiti\zihao{-3}\enboldfont}{\thesection}{1em}{}
 \titleformat{\subsection}
   {\heiti\zihao{4}\enboldfont}{\thesubsection}{1em}{}
 \titleformat{\subsubsection}
   {\heiti\zihao{-4}\enboldfont}{\thesubsubsection}{1em}{}
 
 
+% 定义计数器
+\newcounter{mycounter}
 
+% 定义命令用于显示编号
+\newcommand{\myitem}{%
+  \par \stepcounter{mycounter}%
+  \textbf{\themycounter.}~%
+}
+% 在每个 section 开始时重置计数器
+\let\oldsection\section
+\renewcommand{\section}{%
+  \setcounter{mycounter}{0}%
+  \oldsection%
+}
 % 设置代码块样式
 \lstset{
     basicstyle=\ttfamily,
@@ -61,7 +91,6 @@
 }
 \geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm} % 页边距
 
-
 \begin{document}
 
 % 制作封面页
@@ -76,7 +105,7 @@
     \vspace{1cm}
     {\large \today \par}
     \vspace{4cm}
-    \includegraphics[width=0.5\textwidth]{images/logo.png}
+    \includegraphics[width=0.5\textwidth]{static/images/logo.png}
     \vspace*{\fill}
     \thispagestyle{empty} % 封面不显示页码
     \newpage
