@@ -67,11 +67,25 @@
   \par \stepcounter{mycounter}%
   \textbf{\themycounter.}~%
 }
-% 在每个 section 开始时重置计数器
+% === 重新定义 section ===
 \let\oldsection\section
-\renewcommand{\section}{%
-  \setcounter{mycounter}{0}%
-  \oldsection%
+\renewcommand{\section}[2][]{%
+  \setcounter{mycounter}{0}% 重置计数器
+  \oldsection[#1]{#2}% 调用原始\section命令
+}
+
+% === 重新定义 subsection ===
+\let\oldsubsection\subsection
+\renewcommand{\subsection}[2][]{%
+  \setcounter{mycounter}{0}% 重置计数器
+  \oldsubsection[#1]{#2}% 调用原始\subsection命令
+}
+
+% === 重新定义 subsubsection ===
+\let\oldsubsubsection\subsubsection
+\renewcommand{\subsubsection}[2][]{%
+  \setcounter{mycounter}{0}% 重置计数器
+  \oldsubsubsection[#1]{#2}% 调用原始\subsubsection命令
 }
 % 设置代码块样式
 \lstset{
@@ -111,5 +125,5 @@
     \newpage
 \end{titlepage}
 \include{绪论}
-
+\include{模型评估与选择}
 \end{document}
