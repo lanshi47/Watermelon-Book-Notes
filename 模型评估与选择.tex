@@ -26,7 +26,7 @@
 \subsubsection{自助法(Bootstrapping)}
 有放回的重复随机抽样,执行m次得到m个样本的数据集$D'$.其中,某些样本始终不会被抽中的概率为
 $\lim_{m->\infty}(1-\frac{1}{m})^m\mapsto\frac{1}{e}\approx 0.368$
-自助法适用于小样本.
+自助法适用于小样本gg
 \subsubsection{小结}
 \begin{table}[ht]
 \centering
@@ -190,4 +190,219 @@ AUC可以通过计算ROC曲线下的积分来获得，常用的计算方法包�
 \end{figure}
 \subsection{比较检验}
 \subsubsection{假设检验}
+假设检验是一种统计方法，用于判断样本数据是否支持某个假设。常见的假设检验包括t检验、卡方检验等。在模型评估中，假设检验可以用于比较不同模型的性能差异。
+泛化错误率是指模型在未见过的数据上的预测错误率。为了评估模型的泛化能力，可以使用假设检验的方法。
+测试错误率是指模型在测试集上的预测错误率。通过比较测试错误率和泛化错误率，可以判断模型是否存在过拟合现象。
+在包含m个样本的测试集上,泛化错误率为$\epsilon$ 的学习器被测得测试率为$\hat{\epsilon}$的概率为:
+
+\begin{equation}
+    P(\hat{\epsilon};\epsilon) =
+    \begin{pmatrix}
+        m \\
+        \hat{\epsilon}\times m
+    \end{pmatrix}
+    \times
+    \epsilon^{\hat{\epsilon} \times m} \times (1-\epsilon)^{(1-\hat{\epsilon}) \times m}
+\end{equation}
+
+假设检验的基本步骤如下：
+\begin{enumerate}
+    \item 提出原假设（$H_0$）和备择假设（$H_1$）。例如，$H_0$: 两个模型的性能相同；$H_1$: 两个模型的性能不同。
+    \item 选择显著性水平（$\alpha$），通常为0.05或0.01。
+    \item 计算检验统计量，如t统计量或卡方统计量。
+    \item 根据检验统计量和自由度查找临界值或计算p值。
+    \item 如果p值小于显著性水平，则拒绝原假设，认为两个模型的性能存在显著差异；否则，接受原假设。
+\end{enumerate}
+
+\subsubsection{交叉验证t检验}
+交叉验证t检验是用于比较两个模型在交叉验证中的性能差异的统计方法。假设有两个模型A和B，分别在k折交叉验证中得到k个性能指标（如准确率、F1值等），可以使用t检验来判断这两个模型的性能是否存在显著差异。
+t检验的基本步骤如下：
+\begin{enumerate}
+    \item 计算两个模型在k折交叉验证中的性能指标的均值和标准差。
+    \item 计算t统计量：
+    \begin{equation}
+        t = \frac{\bar{x}_A - \bar{x}_B}{\sqrt{\frac{s_A^2}{k} + \frac{s_B^2}{k}}}
+    \end{equation}
+    其中，$\bar{x}_A$和$\bar{x}_B$分别为模型A和B的均值，$s_A^2$和$s_B^2$分别为模型A和B的方差。
+    \item 根据t统计量和自由度（$df = 2k - 2$）查找t分布表，得到p值。
+    \item 如果p值小于显著性水平（如0.05），则认为两个模型的性能存在显著差异。
+    \item 通过比较两个模型的性能指标（如准确率、F1值等），选择性能更优的模型。
+    \item 如果p值大于显著性水平，则认为两个模型的性能差异不显著，可以选择任意一个模型。
+\end{enumerate}
+\subsubsection{McNemar检验}
+McNemar检验是一种用于比较两个分类模型在同一数据集上的性能差异的非参数统计方法。它主要用于二分类问题，适用于评估两个模型在相同样本上的预测结果是否存在显著差异。
+McNemar检验的基本步骤如下：
+\begin{enumerate}
+    \item 准备一个2x2的混淆矩阵，记录两个模型在同一数据集上的预测结果。矩阵的四个元素分别表示：
+    \begin{itemize}
+        \item $a$: 模型A正确预测为正例，模型B也正确预测为正例。
+        \item $b$: 模型A正确预测为正例，模型B错误预测为负例。
+        \item $c$: 模型A错误预测为负例，模型B正确预测为正例。
+        \item $d$: 模型A错误预测为负例，模型B也错误预测为负例。
+    \end{itemize}
+    \item 计算检验统计量：
+    \begin{equation}
+        X^2 = \frac{(b - c)^2}{b + c}
+    \end{equation}
+    其中，$b$和$c$分别是模型A和B在同一样本上的错误分类数。
+    \item 根据自由度（df=1）查找卡方分布表，得到p值。
+    \item 如果p值小于显著性水平（如0.05），则认为两个模型的性能存在显著差异；否则，接受原假设，认为两个模型的性能差异不显著。
+\end{enumerate}
+\subsubsection{Freedman检验与Nemenyi后续检验}
+Freedman检验是一种非参数统计方法，用于比较多个分类模型在同一数据集上的性能差异。它适用于多分类问题，特别是在多个模型之间进行比较时。
+
+Nemenyi后续检验是一种用于比较多个模型的成对差异的统计方法。它通常在Freedman检验之后进行，以确定哪些模型之间存在显著差异。
+\begin{enumerate}
+    \item 准备一个$k \times n$的矩阵，其中$k$为模型数量，$n$为样本数量。矩阵的每个元素表示模型在对应样本上的预测结果。
+    \item 计算每个模型的平均排名，并计算每个模型的排名差异。
+    \item 计算Freedman检验的统计量：
+    \begin{equation}
+        Q = \frac{12}{n k (k + 1)} \sum_{j=1}^{k} R_j^2 - 3n(k + 1)
+    \end{equation}
+    其中，$R_j$为第$j$个模型的排名和。
+    \item 根据自由度（df=$k-1$）查找卡方分布表，得到p值。
+    \item 如果p值小于显著性水平（如0.05），则认为至少有两个模型之间存在显著差异。
+    \item 进行Nemenyi后续检验，计算每对模型之间的成对差异，并根据差异大小进行排序。
+    \item 根据Nemenyi检验的结果，确定哪些模型之间存在显著差异，并进行成对比较。
+\end{enumerate}
+
+\subsubsection{各种检验的比较}
+\begin{table}[H]
+    \centering
+    \captionsetup{justification=centering} % 使标题居中对齐
+    \begin{tabular}{c p{4cm} p{3cm} p{3cm}}
+        \toprule
+        检验方法 & 适用场景 & 优点 & 缺点 \\
+        \midrule
+        假设检验 & 比较两个模型的性能差异 & 简单易懂 & 需要满足一定的假设 \\
+
+        交叉验证t检验 & 比较两个模型在交叉验证中的性能差异 & 考虑了数据的划分 & 需要多次训练模型 \\
+ 
+        McNemar检验 & 比较两个分类模型在同一数据集上的性能差异 & 适用于二分类问题 & 仅适用于同一数据集 \\
+ 
+        Freedman检验 & 比较多个分类模型在同一数据集上的性能差异 & 适用于多分类问题 & 需要满足一定的假设 \\
+ 
+        Nemenyi后续检验 & 比较多个模型的成对差异 & 可以发现具体差异 & 需要在Freedman检验之后进行 \\
+        \bottomrule
+    \end{tabular}
+    \caption{各种检验方法的比较}
+    \label{tab:comparison}
+\end{table}
+
+\subsection{偏差与方差}
+偏差:模型预测值与真实值之间的差异,反映模型对数据的拟合程度.
+方差:模型预测值的波动性,反映模型对数据的敏感程度.
+泛化误差:模型在新样本上的预测误差,由偏差和方差共同决定.
+\begin{equation}
+    E(f;D) = \text{Bias}^2 + \text{Var} + \text{Noise}
+\end{equation}
+\textbf{偏差-方差分解}:
+\begin{equation}
+    E(f;D) = \mathbb{E}[(f(x) - y)^2] = \mathbb{E}[(f(x) - \mathbb{E}[f(x)])^2] + \mathbb{E}[(\mathbb{E}[f(x)] - y)^2] + \text{Var}(f(x))
+\end{equation}
+\textbf{偏差-方差权衡}:
+\begin{itemize}
+    \item 高偏差: 模型过于简单,无法捕捉数据的复杂性,导致欠拟合.
+    \item 高方差: 模型过于复杂,对训练数据的噪声敏感,导致过拟合.
+    \item 理想模型: 低偏差和低方差,能够很好地泛化到新样本.
+\end{itemize}
+\textbf{偏差-方差分解的图示}:
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\textwidth]{static/images/偏差方差误差图.png}
+    \caption{偏差-方差分解示意图}
+    \label{fig:bias_variance_decomposition}
+\end{figure}
+\subsection{阅读材料}
+略
+\subsection{习题}
+\subsubsection*{2.1}
+数据集包含 1000 个样本，其中 500 个正例、500 个反例，将其划分为包含 70\% 样本的训练集和 30\% 样本的测试集用于留出法评估，试估算共有多少种划分方式.
+\par 答:正例的训练集的组合数C(500, 350), 反例的训练集的组合数C(500, 350), 所以总的划分方式为C(500, 350) * C(500, 350).
+\subsubsection*{2.2}
+数据集包含100个样本,其中正、反例各一半,假定学习算法所产生的模型是将新样本预测为训练样本数较多的类别(训练样本数相同时进行随机猜测),试给出用10折交叉验证法和留一法分别对错误率进行评估所得的结果.
+
+\par 答:10折交叉验证法将数据集分为10个子集,每次使用9个子集作为训练集,1个子集作为测试集,因此每次评估的错误率是基于9/10的样本进行的.留一法则是每次留一个样本作为测试集,其他99个样本作为训练集,因此每次评估的错误率是基于99/100的样本进行的.
+\subsubsection*{2.3}
+若学习器A的F1值比学习器B高,试析A的BEP值是否也比B高.
+\par 答:不一定. F1值是查准率和查全率的调和平均数,而BEP值是查准率和查全率相等时的点.因此,即使A的F1值高于B,也不能直接推断A的BEP值高于B.需要具体分析A和B的查准率和查全率的关系才能得出结论.
+\subsubsection*{2.4}
+试述真正例率(TPR)、假正例率(FPR)与查准率(P)、查全率(R)之间的联系.
+\par 答:真正例率(TPR)也称为查全率(R),表示实际正例中被正确预测为正例的比例;假正例率(FPR)表示实际负例中被错误预测为正例的比例;查准率(P)表示预测为正例的样本中实际为正例的比例.它们之间的关系可以通过混淆矩阵来理解:
+\begin{align*}
+    TPR &= \frac{TP}{TP + FN} = R \\
+    FPR &= \frac{FP}{FP + TN} \\
+    P &= \frac{TP}{TP + FP}
+\end{align*}
+\subsubsection*{2.5}
+试证明式\begin{equation}
+    \text{AUC} = 1 - \ell_{\text{rank}}.
+\end{equation}
+\par   证明: AUC (Area Under Curve) 是ROC曲线下的面积,而$\ell_{\text{rank}}$是基于排名的损失函数.通过构造合适的样本对,可以证明AUC与$\ell_{\text{rank}}$之间的关系,从而得出上述等式.
+\subsubsection*{2.6}
+试述错误率与ROC曲线的联系.
+\par 答:错误率是分类模型在测试集上的预测错误比例,而ROC曲线是通过绘制真正例率(TPR)与假正例率(FPR)的关系来评估分类模型性能的图形表示.ROC曲线的形状和位置可以反映模型的错误率,例如,如果ROC曲线接近左上角,则表示模型具有较低的错误率;如果ROC曲线接近对角线,则表示模型的错误率较高.
+\subsubsection*{2.7}
+试证明任意一条ROC曲线都有一条代价曲线与之对应,反之亦然.
+
+\par 证明: 任意一条ROC曲线可以通过改变分类阈值来得到不同的TPR和FPR值,从而形成一条代价曲线.反之,给定一条代价曲线,也可以通过调整分类阈值来得到对应的TPR和FPR值,从而形成一条ROC曲线.因此,任意一条ROC曲线都有一条代价曲线与之对应,反之亦然.
+\subsubsection*{2.8}
+Min-max 规范化和 z-score 规范化是两种常用的规范化方法。令 \( x \) 和 \( x' \) 分别表示变量在规范化前后的取值，相应的，令 \( x_{\text{min}} \) 和 \( x_{\text{max}} \) 表示规范化前的最小值和最大值，\( x'_{\text{min}} \) 和 \( x'_{\text{max}} \) 表示规范化后的最小值和最大值，\( \bar{x} \) 和 \( \sigma_x \) 分别表示规范化前的均值和标准差，则 min-max 规范化、z-score 规范化分别如式 (2.43) 和 (2.44) 所示。试析二者的优缺点。
+
+\[
+x' = x'_{\text{min}} + \frac{x - x_{\text{min}}}{x_{\text{max}} - x_{\text{min}}} \times (x'_{\text{max}} - x'_{\text{min}}),
+\]
+\[
+x' = \frac{x - \bar{x}}{\sigma_x}.
+\]
+
+\par 答: Min-max 规范化的优点是能够保持原始数据的分布形状,并且对异常值不敏感;缺点是对数据的最小值和最大值敏感,可能导致信息丢失. Z-score 规范化的优点是能够消除不同特征之间的量纲影响,并且对异常值敏感;缺点是可能导致数据分布形状改变.
+\subsubsection*{2.9}
+试述 $\chi^2$ 检验过程.
+
+\par 答: $\chi^2$ 检验过程包括以下步骤:
+\begin{enumerate}
+    \item 提出原假设和备择假设。原假设通常是样本数据符合某种分布或两个样本之间没有显著差异。
+    \item 计算 $\chi^2$ 统计量，公式为：
+    \[
+    \chi^2 = \sum_{i=1}^{k} \frac{(O_i - E_i)^2}{E_i}
+    \]
+    其中，$O_i$ 是观察频数，$E_i$ 是期望频数，$k$ 是类别数。
+    \item 根据自由度（df）查找 $\chi^2$ 分布表，得到临界值或计算 p 值。
+    \item 如果 p 值小于显著性水平（如 0.05），则拒绝原假设，认为样本数据存在显著差异；否则，接受原假设。
+    \item 结果解释：根据检验结果，分析样本数据的特征或类别之间的关系。
+\end{enumerate}
+\subsubsection*{2.10}
+试述在 Friedman 检验中使用式 的区别.
+\begin{align*}
+    \tau_{\chi^2} &= \frac{k-1}{k} \cdot \frac{12N}{k^2-1} \sum_{i=1}^{k} \left( r_i - \frac{k+1}{2} \right)^2 \\
+    &= \frac{12N}{k(k+1)} \left( \sum_{i=1}^{k} r_i^2 - \frac{k(k+1)^2}{4} \right)
+\end{align*}
+\begin{equation*}
+    \tau_F = \frac{(N-1) \tau_{\chi^2}}{N(k-1) - \tau_{\chi^2}}
+\end{equation*}
+\par 答:
+Friedman 检验是一种非参数统计方法，用于比较多个算法在多次实验中的表现。在 Friedman 检验中，两种常用的统计量分别是 $\tau_{\chi^2}$ 和 $\tau_F$，它们分别用于评估算法的整体表现和排名差异。
+
+$\tau_{\chi^2}$ 是基于卡方分布的统计量，用于衡量算法在不同实验中的表现差异。它可以通过以下公式计算：
+
+\[
+\tau_{\chi^2} = \frac{k-1}{k} \cdot \frac{12N}{k^2-1} \sum_{i=1}^{k} \left( r_i - \frac{k+1}{2} \right)^2
+\]
+
+或者等价地表示为：
+
+\[
+\tau_{\chi^2} = \frac{12N}{k(k+1)} \left( \sum_{i=1}^{k} r_i^2 - \frac{k(k+1)^2}{4} \right)
+\]
+
+其中，$k$ 是算法的数量，$N$ 是实验的次数，$r_i$ 是第 $i$ 个算法的平均排名。
+
+$\tau_F$ 是基于 F 分布的统计量，用于进一步评估排名差异的显著性。它可以通过以下公式计算：
+
+\[
+\tau_F = \frac{(N-1) \tau_{\chi^2}}{N(k-1) - \tau_{\chi^2}}
+\]
+
+$\tau_{\chi^2}$ 主要用于初步评估算法的整体表现，而 $\tau_F$ 则用于进一步分析排名差异的显著性。两者的主要区别在于，$\tau_{\chi^2}$ 提供了一个整体的性能评估，而 $\tau_F$ 则更关注于排名差异的具体程度。
 
