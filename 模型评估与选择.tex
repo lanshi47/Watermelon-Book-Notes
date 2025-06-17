@@ -1,15 +1,17 @@
-\section{模型评估与选择}
-\subsection{经验误差与拟合}
+\chapter{模型评估与选择}
+\section{经验误差与拟合}
 \myitem 错误率:m个样本中有a个样本分类错误,则错误率$E=a/m$.
 \myitem 精度:$1-a/m$
 \myitem 误差:学习器的实际预测输出与样本的真实输出之间的差异;训练集上的叫\underline{训练误差}/\underline{经验误差},新样本上的叫\underline{泛化误差};
 \myitem 过拟合(更容易遇到的情况):将个例的特殊性错误地视为样本的普遍性;欠拟合:没有学好.
 \par 过拟合无法避免(N=NP问题尚未证明),只能缓解或减小其风险
 \myitem 模型选择:在多种学习算法中,选择合适的算法中的合适的参数配置.
-\subsection{评估方法}
+\section{评估方法}
+\setcounter{mycounter}{0}
 \myitem 测试集测试学习器对新样本的判断力,将测试误差近似于泛化误差.\underline{测试集尽可能的不出现在训练集中}.(老师更希望学生有举一反三的能力)
 \myitem \textbf{如果只有一个数据集,既要训练又要测试,如何解决?}
-\subsubsection{留出法}
+\subsection{留出法}
+\setcounter{mycounter}{0}
 直接将数据集D划分为两个互斥的集合,其中一个集合作为训练集S,另一个作为测试集T.在S上训练出模型后用T来评估其测试误差.
 \myitem 训练/测试集的划分要尽可能保持数据分布的一致性(分类任务时,至少要保持样本的类别比例相似)采样角度上看,则保留类别比例的采样方式通常称为\underline{分层采样}\par
 例如:通过对D进行分层采样而获得含70\%样本的训练集S和含30\%样本的测试集T,
@@ -19,15 +21,15 @@
 例如进行100次随机划分，每次产生一个训练/测试集用于实验评估，100次后就得到100个结果，而留出法返回的则是这100个结果的平均.
 \myitem 局限性:若令训练集S包含绝大多数样本，则训练出的模型可能更接近于用D训练出的模型，但由于T比较小，评估结果可能不够稳定准确；
 若令测试集T多包含一些样本，则训练集S与D差别更大了，被评估的模型与用D训练出的模型相比可能有较大差别，从而降低了评估结果的保真性(fidelity).这个问题没有完美的解决方案，常见做法是将大约2/3～4/5的样本用于训练，剩余样本用于测试.
-\subsubsection{交叉验证法}
+\subsection{交叉验证法}
 将数据集分为k个相似的子集,每一折交叉验证时,k-1为训练集,剩余的一个为测试集,共k次不同的测试集,为k折交叉验证法.
 交叉验证法同样需要进行随机划分,例如10次10折交叉验证法和100次留出法都需要进行100次训练/测试.
 \par \textbf{\heiti 留一法(LOO)},数据集共m个,当k=m时,为留一法.训练出来的模型会更准确,但计算开销较大.
-\subsubsection{自助法(Bootstrapping)}
+\subsection{自助法(Bootstrapping)}
 有放回的重复随机抽样,执行m次得到m个样本的数据集$D'$.其中,某些样本始终不会被抽中的概率为
 $\lim_{m->\infty}(1-\frac{1}{m})^m\mapsto\frac{1}{e}\approx 0.368$
-自助法适用于小样本gg
-\subsubsection{小结}
+自助法适用于小样本
+\subsection{小结}
 \begin{table}[ht]
 \centering
 \begin{tabular}{lcccc}
@@ -49,10 +51,10 @@ $\lim_{m->\infty}(1-\frac{1}{m})^m\mapsto\frac{1}{e}\approx 0.368$
     \item 小样本高精度需求：留一法（但需权衡计算成本）。
     \item 统计量分布估计或小样本：自助法。
 \end{itemize}
-\subsubsection{调参与最终模型}
+\subsection{调参与最终模型}
 调参对最终模型有关键性影响，通过验证集来评估模型的好坏。
 \newpage
-\subsection{性能度量}
+\section{性能度量}
 使用不同的性能度量会导致不同的评判结果。
 比如，回归任务最常用的性能度量是“均方误差”：
 \begin{equation}
@@ -62,7 +64,7 @@ $\lim_{m->\infty}(1-\frac{1}{m})^m\mapsto\frac{1}{e}\approx 0.368$
 \begin{equation}
     E(f;D)=\int_{x\sim D} (f(x)-y)^2 p(x)dx
 \end{equation}
-\subsubsection{错误率与精度}
+\subsection{错误率与精度}
 对于样例集D，分类错误率定义为：
 \begin{equation}
     E(f;D)=\frac{1}{m}\sum_{i=1}^{m} \mathbb{I}(f(x_i)\neq y_i)
@@ -84,7 +86,7 @@ $\lim_{m->\infty}(1-\frac{1}{m})^m\mapsto\frac{1}{e}\approx 0.368$
     \text{acc}(f;D) &= 1 - E(f;D) \nonumber \\
     &= \int_{x\sim D} \mathbb{I}(f(x) = y) p(x)dx
 \end{align}
-\subsubsection{查准率、查全率与F1值}
+\subsection{查准率、查全率与F1值}
 查准率（Precision）和查全率（Recall）是分类任务中常用的性能度量，尤其在处理不平衡数据集时非常重要。
 查准率亦称准确率，表示预测为正例的样本中实际为正例的比例：
 \begin{equation}
@@ -130,7 +132,7 @@ F1值是查准率和查全率的调和平均数，常用来综合评估分类器
     R_{micro} &= \frac{\sum_{i=1}^{n} TP_i}{\sum_{i=1}^{n} TP_i + \sum_{i=1}^{n} FN_i} \nonumber \\
     F1_{micro} &= \frac{2 \times P_{micro} \times R_{micro}}{P_{micro} + R_{micro}}
 \end{align}
-\subsubsection{ROC曲线与AUC}
+\subsection{ROC曲线与AUC}
 ROC曲线（Receiver Operating Characteristic Curve）是评估二分类模型性能的常用工具，通过绘制真正率（TPR）与假正率（FPR）的关系来展示分类器在不同阈值下的表现。
 真正率（TPR）也称为查全率（Recall），表示实际正例中被正确预测为正例的比例：
 \begin{equation}
@@ -166,7 +168,7 @@ AUC可以通过计算ROC曲线下的积分来获得，常用的计算方法包�
 \begin{equation}
     AUC = 1 - \ell_{rank}
 \end{equation}
-\subsubsection{代价敏感错误率与代价曲线}
+\subsection{代价敏感错误率与代价曲线}
 非均等代价: 在某些应用中,不同类型的错误可能具有不同的代价,例如在医疗诊断中,漏诊(假阴性)可能比误诊(假阳性)更严重.
 代价敏感错误率: 在这种情况下,需要引入代价敏感错误率来衡量模型的性能,定义为:
 \begin{equation}
@@ -188,8 +190,8 @@ AUC可以通过计算ROC曲线下的积分来获得，常用的计算方法包�
     \caption{代价曲线示例}
     \label{fig:cost_curve}
 \end{figure}
-\subsection{比较检验}
-\subsubsection{假设检验}
+\section{比较检验}
+\subsection{假设检验}
 假设检验是一种统计方法，用于判断样本数据是否支持某个假设。常见的假设检验包括t检验、卡方检验等。在模型评估中，假设检验可以用于比较不同模型的性能差异。
 泛化错误率是指模型在未见过的数据上的预测错误率。为了评估模型的泛化能力，可以使用假设检验的方法。
 测试错误率是指模型在测试集上的预测错误率。通过比较测试错误率和泛化错误率，可以判断模型是否存在过拟合现象。
@@ -214,7 +216,7 @@ AUC可以通过计算ROC曲线下的积分来获得，常用的计算方法包�
     \item 如果p值小于显著性水平，则拒绝原假设，认为两个模型的性能存在显著差异；否则，接受原假设。
 \end{enumerate}
 
-\subsubsection{交叉验证t检验}
+\subsection{交叉验证t检验}
 交叉验证t检验是用于比较两个模型在交叉验证中的性能差异的统计方法。假设有两个模型A和B，分别在k折交叉验证中得到k个性能指标（如准确率、F1值等），可以使用t检验来判断这两个模型的性能是否存在显著差异。
 t检验的基本步骤如下：
 \begin{enumerate}
@@ -229,7 +231,7 @@ t检验的基本步骤如下：
     \item 通过比较两个模型的性能指标（如准确率、F1值等），选择性能更优的模型。
     \item 如果p值大于显著性水平，则认为两个模型的性能差异不显著，可以选择任意一个模型。
 \end{enumerate}
-\subsubsection{McNemar检验}
+\subsection{McNemar检验}
 McNemar检验是一种用于比较两个分类模型在同一数据集上的性能差异的非参数统计方法。它主要用于二分类问题，适用于评估两个模型在相同样本上的预测结果是否存在显著差异。
 McNemar检验的基本步骤如下：
 \begin{enumerate}
@@ -248,7 +250,7 @@ McNemar检验的基本步骤如下：
     \item 根据自由度（df=1）查找卡方分布表，得到p值。
     \item 如果p值小于显著性水平（如0.05），则认为两个模型的性能存在显著差异；否则，接受原假设，认为两个模型的性能差异不显著。
 \end{enumerate}
-\subsubsection{Freedman检验与Nemenyi后续检验}
+\subsection{Freedman检验与Nemenyi后续检验}
 Freedman检验是一种非参数统计方法，用于比较多个分类模型在同一数据集上的性能差异。它适用于多分类问题，特别是在多个模型之间进行比较时。
 
 Nemenyi后续检验是一种用于比较多个模型的成对差异的统计方法。它通常在Freedman检验之后进行，以确定哪些模型之间存在显著差异。
@@ -266,7 +268,7 @@ Nemenyi后续检验是一种用于比较多个模型的成对差异的统计方�
     \item 根据Nemenyi检验的结果，确定哪些模型之间存在显著差异，并进行成对比较。
 \end{enumerate}
 
-\subsubsection{各种检验的比较}
+\subsection{各种检验的比较}
 \begin{table}[H]
     \centering
     \captionsetup{justification=centering} % 使标题居中对齐
@@ -289,7 +291,7 @@ Nemenyi后续检验是一种用于比较多个模型的成对差异的统计方�
     \label{tab:comparison}
 \end{table}
 
-\subsection{偏差与方差}
+\section{偏差与方差}
 偏差:模型预测值与真实值之间的差异,反映模型对数据的拟合程度.
 方差:模型预测值的波动性,反映模型对数据的敏感程度.
 泛化误差:模型在新样本上的预测误差,由偏差和方差共同决定.
@@ -313,20 +315,20 @@ Nemenyi后续检验是一种用于比较多个模型的成对差异的统计方�
     \caption{偏差-方差分解示意图}
     \label{fig:bias_variance_decomposition}
 \end{figure}
-\subsection{阅读材料}
+\section{阅读材料}
 略
-\subsection{习题}
-\subsubsection*{2.1}
+\section{习题}
+\subsection*{2.1}
 数据集包含 1000 个样本，其中 500 个正例、500 个反例，将其划分为包含 70\% 样本的训练集和 30\% 样本的测试集用于留出法评估，试估算共有多少种划分方式.
 \par 答:正例的训练集的组合数C(500, 350), 反例的训练集的组合数C(500, 350), 所以总的划分方式为C(500, 350) * C(500, 350).
-\subsubsection*{2.2}
+\subsection*{2.2}
 数据集包含100个样本,其中正、反例各一半,假定学习算法所产生的模型是将新样本预测为训练样本数较多的类别(训练样本数相同时进行随机猜测),试给出用10折交叉验证法和留一法分别对错误率进行评估所得的结果.
 
 \par 答:10折交叉验证法将数据集分为10个子集,每次使用9个子集作为训练集,1个子集作为测试集,因此每次评估的错误率是基于9/10的样本进行的.留一法则是每次留一个样本作为测试集,其他99个样本作为训练集,因此每次评估的错误率是基于99/100的样本进行的.
-\subsubsection*{2.3}
+\subsection*{2.3}
 若学习器A的F1值比学习器B高,试析A的BEP值是否也比B高.
 \par 答:不一定. F1值是查准率和查全率的调和平均数,而BEP值是查准率和查全率相等时的点.因此,即使A的F1值高于B,也不能直接推断A的BEP值高于B.需要具体分析A和B的查准率和查全率的关系才能得出结论.
-\subsubsection*{2.4}
+\subsection*{2.4}
 试述真正例率(TPR)、假正例率(FPR)与查准率(P)、查全率(R)之间的联系.
 \par 答:真正例率(TPR)也称为查全率(R),表示实际正例中被正确预测为正例的比例;假正例率(FPR)表示实际负例中被错误预测为正例的比例;查准率(P)表示预测为正例的样本中实际为正例的比例.它们之间的关系可以通过混淆矩阵来理解:
 \begin{align*}
@@ -334,19 +336,19 @@ Nemenyi后续检验是一种用于比较多个模型的成对差异的统计方�
     FPR &= \frac{FP}{FP + TN} \\
     P &= \frac{TP}{TP + FP}
 \end{align*}
-\subsubsection*{2.5}
+\subsection*{2.5}
 试证明式\begin{equation}
     \text{AUC} = 1 - \ell_{\text{rank}}.
 \end{equation}
 \par   证明: AUC (Area Under Curve) 是ROC曲线下的面积,而$\ell_{\text{rank}}$是基于排名的损失函数.通过构造合适的样本对,可以证明AUC与$\ell_{\text{rank}}$之间的关系,从而得出上述等式.
-\subsubsection*{2.6}
+\subsection*{2.6}
 试述错误率与ROC曲线的联系.
 \par 答:错误率是分类模型在测试集上的预测错误比例,而ROC曲线是通过绘制真正例率(TPR)与假正例率(FPR)的关系来评估分类模型性能的图形表示.ROC曲线的形状和位置可以反映模型的错误率,例如,如果ROC曲线接近左上角,则表示模型具有较低的错误率;如果ROC曲线接近对角线,则表示模型的错误率较高.
-\subsubsection*{2.7}
+\subsection*{2.7}
 试证明任意一条ROC曲线都有一条代价曲线与之对应,反之亦然.
 
 \par 证明: 任意一条ROC曲线可以通过改变分类阈值来得到不同的TPR和FPR值,从而形成一条代价曲线.反之,给定一条代价曲线,也可以通过调整分类阈值来得到对应的TPR和FPR值,从而形成一条ROC曲线.因此,任意一条ROC曲线都有一条代价曲线与之对应,反之亦然.
-\subsubsection*{2.8}
+\subsection*{2.8}
 Min-max 规范化和 z-score 规范化是两种常用的规范化方法。令 \( x \) 和 \( x' \) 分别表示变量在规范化前后的取值，相应的，令 \( x_{\text{min}} \) 和 \( x_{\text{max}} \) 表示规范化前的最小值和最大值，\( x'_{\text{min}} \) 和 \( x'_{\text{max}} \) 表示规范化后的最小值和最大值，\( \bar{x} \) 和 \( \sigma_x \) 分别表示规范化前的均值和标准差，则 min-max 规范化、z-score 规范化分别如式 (2.43) 和 (2.44) 所示。试析二者的优缺点。
 
 \[
@@ -357,7 +359,7 @@ x' = \frac{x - \bar{x}}{\sigma_x}.
 \]
 
 \par 答: Min-max 规范化的优点是能够保持原始数据的分布形状,并且对异常值不敏感;缺点是对数据的最小值和最大值敏感,可能导致信息丢失. Z-score 规范化的优点是能够消除不同特征之间的量纲影响,并且对异常值敏感;缺点是可能导致数据分布形状改变.
-\subsubsection*{2.9}
+\subsection*{2.9}
 试述 $\chi^2$ 检验过程.
 
 \par 答: $\chi^2$ 检验过程包括以下步骤:
@@ -372,7 +374,7 @@ x' = \frac{x - \bar{x}}{\sigma_x}.
     \item 如果 p 值小于显著性水平（如 0.05），则拒绝原假设，认为样本数据存在显著差异；否则，接受原假设。
     \item 结果解释：根据检验结果，分析样本数据的特征或类别之间的关系。
 \end{enumerate}
-\subsubsection*{2.10}
+\subsection*{2.10}
 试述在 Friedman 检验中使用式 的区别.
 \begin{align*}
     \tau_{\chi^2} &= \frac{k-1}{k} \cdot \frac{12N}{k^2-1} \sum_{i=1}^{k} \left( r_i - \frac{k+1}{2} \right)^2 \\

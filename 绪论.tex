@@ -1,7 +1,8 @@
-\section{绪论}
-\subsection{引言}
+\setcounter{page}{1}
+\chapter{绪论}
+\section{引言}
 略
-\subsection{基本术语}
+\section{基本术语}
 \begin{enumerate}[label=(\roman*)]
     \item 样本/示例-sample/instance
     \item 训练集-training data
@@ -10,15 +11,15 @@
     \item 样例-example:拥有label的instance
     \item 泛化-generalization
 \end{enumerate}
-\subsection{假设空间}
-\subsubsection{科学推理}
+\section{假设空间}
+\subsection{科学推理}
 \begin{itemize}
     \item 归纳--induction
     从具体的事实归结出一般性规律
     \item 演绎--deduction
     从基础原理推演出具体状况
 \end{itemize}
-\subsubsection{归纳学习--inductive learning}
+\subsection{归纳学习--inductive learning}
 \begin{itemize}
     \item 广义归纳学习
     \item 狭义归纳学习--概念学习
@@ -26,12 +27,12 @@
 \end{itemize}
 \subsubsection{版本空间--version space}
 即存在着一个与训练集一致的"假设集合"
-\subsection{归纳偏好}
+\section{归纳偏好}
 有多个与训练集一致的假设,但测试新样本时有不同的输出结果,那么采用哪种模型(假设)?
-\subsubsection{"奥卡姆剃刀"原则}
+\subsection{"奥卡姆剃刀"原则}
 若有多个假设与观察一致,则选最简单的那个.
 利用什么原则,取决于算法能否获得更好的性能,泛化能力是否更强
-\subsubsection{NFL(No Free Lunch Theorem)定理--"没有免费的午餐"定理}
+\subsection{NFL(No Free Lunch Theorem)定理--"没有免费的午餐"定理}
 
 \begin{theorem}[No Free Lunch 定理]\label{thm:nfl}
     对于所有学习算法 $\mathcal{L}_a$ 和 $\mathcal{L}_b$，在均匀分布的目标函数空间下，它们的训练外误差满足：
@@ -82,7 +83,7 @@
     \end{proofstep}
 \end{proof}
 由\ref{thm:nfl}可知,脱离具体问题,空谈"什么学习算法最好"是毫无意义的
-\subsection{发展历程}
+\section{发展历程}
 推理期:1950s-1970s--符号知识,演绎推理
 
 知识期:1970s中期--符号知识,领域知识
@@ -93,11 +94,11 @@
 
 深度学习:2000s--神经网络
 
-\subsection{应用现状}
+\section{应用现状}
 信息科学,自然科学\dots
 
-\subsection{阅读材料}
-\subsubsection{机器学习}
+\section{阅读材料}
+\subsection{机器学习}
 国际会议:ICML,NIPS，COLT,ECML(Europe),ACML(Asia)
 
 国际期刊:JMLR,ML
@@ -114,16 +115,16 @@
 
 国际期刊:ACM-TKDD,DMKD
 
-\subsubsection{计算机视觉}
+\subsection{计算机视觉}
 CVPR(会议),IEEE-TPAMI(期刊)
 
-\subsubsection{神经网络}
+\subsection{神经网络}
 期刊:NC,IEEE-TNNLS
 \subsubsection{统计学}
 期刊:AS
 
-\subsection{习题}
-\subsubsection{表1.1中若只包含编号为1和4的两个样例，试给出相应的版本空间.}
+\section{习题}
+\subsection{表1.1中若只包含编号为1和4的两个样例，试给出相应的版本空间.}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{static/images/西瓜数据集.png}
@@ -147,7 +148,7 @@ CVPR(会议),IEEE-TPAMI(期刊)
     \bottomrule
     \end{tabular}
 \end{table}
-\subsubsection{估算共有多少种可能的假设}
+\subsection{估算共有多少种可能的假设}
 与使用单个合取式来进行假设表示相比，使用“析合范式”将使得假设空间具有更强的表示能力。例如
 
 好瓜 $\Leftrightarrow\left(\right.$ \textnormal{色泽} $=\star)\wedge($ \textnormal{根蒂} $=$ \textnormal{蜷缩} $\wedge$ \textnormal{敲声} $=\star)$
@@ -162,10 +163,10 @@ $\vee\left(\right.$ \textnormal{色泽} $=$ \textnormal{乌黑} $\wedge$\textnor
 \begin{equation}
     \boxed{\sum_{i}^{k} \binom{47}{i}}
 \end{equation}
-\subsubsection{若数据包含噪声，则假设空间中有可能不存在与所有训练样本都一致的假设。在此情形下，试设计一种归纳偏好用于假设选择。}
+\subsection{若数据包含噪声，则假设空间中有可能不存在与所有训练样本都一致的假设。在此情形下，试设计一种归纳偏好用于假设选择。}
 解:刚入门,可能无法正确回答此问题,但存在的方法应该有权重噪声注入/梯度稳定性惩罚/稀疏性偏好/集成鲁棒性.
 
-\subsubsection{试证明“没有免费的午餐定理”仍成立。}
+\subsection{试证明“没有免费的午餐定理”仍成立。}
 本章 1.4 节在论述“没有免费的午餐”定理时，默认使用了“分类错误率”作为性能度量来对分类器进行评估。若换用其他性能度量 \( \ell \)，则式(1.1)将改为
 
 \[ E_{ote}(\mathcal{L}_a | X, f) = \sum_h \sum_{x \in \mathcal{X} - X} P(x) \ell(h(x), f(x)) P(h | X, \mathcal{L}_a) \]
@@ -199,5 +200,5 @@ $\vee\left(\right.$ \textnormal{色泽} $=$ \textnormal{乌黑} $\wedge$\textnor
     \end{equation}
 \end{proof}
 无论选择何种性能度量 \(\ell\)，只要真实目标函数 \( f \) 在所有可能的函数上均匀分布，无免费午餐定理仍然成立。算法的平均性能仅由数据分布和度量 \(\ell\) 的对称性决定，而与算法本身的设计无关。
-\subsubsection{试述机器学习能在互联网搜索的哪些环节起什么作用。}
+\subsection{试述机器学习能在互联网搜索的哪些环节起什么作用。}
 机器学习贯穿搜索的全流程，从理解用户意图到动态优化结果，其核心价值在于通过数据驱动的方式提升搜索效率、准确性和个性化程度。知识库中提到的超参数优化（如随机搜索）、分布式表示（如协同过滤）等技术均为此提供了方法论支持。机器学习贯穿搜索的全流程，从理解用户意图到动态优化结果，其核心价值在于通过数据驱动的方式提升搜索效率、准确性和个性化程度。知识库中提到的超参数优化（如随机搜索）、分布式表示（如协同过滤）等技术均为此提供了方法论支持。

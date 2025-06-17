@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt,UTF8,fontset=none]{ctexart}
+\documentclass[a4paper,12pt,UTF8,fontset=none]{ctexbook} % 使用ctexbook文档类
 \usepackage{geometry} % 页面设置
 \usepackage{xeCJK}
 \usepackage{enumitem}
@@ -22,6 +22,9 @@
 \usepackage{background} % 添加水印宏包
 \usepackage{hyperref} % 超链接引用
 \usepackage{cleveref}
+\usepackage{fancyhdr}  % 导入页眉页脚宏包
+
+
 \newtheorem{theorem}{定理}[section] % 定理编号按章节
 \newtheorem{proofstep}{步骤}[theorem] % 证明步骤编号依附定理
 
@@ -47,18 +50,6 @@
 \setCJKfamilyfont{zhhei}{SimHei}[Path=D:/Program Files/MiKTeX/fonts/custom/, Extension=.ttf]
 \newcommand{\heiti}{\CJKfamily{zhhei}}
 
-% 自定义编号格式
-\renewcommand{\thesection}{\arabic{section}}
-\renewcommand{\thesubsection}{\thesection.\arabic{subsection}}
-\renewcommand{\thesubsubsection}{\thesubsection.\arabic{subsubsection}}
-% 设置标题格式
-\titleformat{\section}
-  {\centering\heiti\zihao{-3}\enboldfont}{\thesection}{1em}{}
-\titleformat{\subsection}
-  {\heiti\zihao{4}\enboldfont}{\thesubsection}{1em}{}
-\titleformat{\subsubsection}
-  {\heiti\zihao{-4}\enboldfont}{\thesubsubsection}{1em}{}
-
 
 % 定义计数器
 \newcounter{mycounter}
@@ -68,26 +59,13 @@
   \par \stepcounter{mycounter}%
   \textbf{\themycounter.}~%
 }
-% === 重新定义 section ===
-\let\oldsection\section
-\renewcommand{\section}[2][]{%
-  \setcounter{mycounter}{0}% 重置计数器
-  \oldsection[#1]{#2}% 调用原始\section命令
-}
-
-% === 重新定义 subsection ===
-\let\oldsubsection\subsection
-\renewcommand{\subsection}[2][]{%
-  \setcounter{mycounter}{0}% 重置计数器
-  \oldsubsection[#1]{#2}% 调用原始\subsection命令
-}
-
-% === 重新定义 subsubsection ===
-\let\oldsubsubsection\subsubsection
-\renewcommand{\subsubsection}[2][]{%
-  \setcounter{mycounter}{0}% 重置计数器
-  \oldsubsubsection[#1]{#2}% 调用原始\subsubsection命令
-}
+% 设置页眉页脚样式
+\pagestyle{fancy}     
+\fancyhead[LE]{\leftmark}    % 偶数页左：章标题
+\fancyhead[RO]{\rightmark}   % 奇数页右：节标题
+\fancyhead[LO]{\thepage}     % 奇数页左：页码
+\fancyhead[RE]{\thepage}     % 偶数页右：页码
+\renewcommand{\headrulewidth}{0.4pt} % 页眉下划线厚度
 % 设置代码块样式
 \lstset{
     basicstyle=\ttfamily,
@@ -115,7 +93,7 @@
     backgroundcolor=\color{white},
     language=Matlab
 }
-\geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm} % 页边距
+\geometry{left=2.5cm,right=2.5cm,top=2.2cm,bottom=2.2cm} % 页边距
 
 \begin{document}
 
